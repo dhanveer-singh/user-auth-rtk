@@ -23,16 +23,6 @@ const theme = createTheme({
     },
   },
   spacing: 8,
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: '10px', // Make buttons have rounded corners
-          textTransform: 'none', // Disable uppercase text
-        },
-      },
-    },
-  },
 });
 
 export default theme;

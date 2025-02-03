@@ -2,13 +2,13 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import App from '@/App';
 import NotFound from '@/components/notFound';
-import Signup from '@/components/signup';
 import AuthLayout from '@/layouts/authLayout';
+import Signup from '@/pages/auth/signup/signup';
 
 const AppRoutes = createBrowserRouter([
   {
     path: '/',
-    element: <AuthLayout />, 
+    element: <AuthLayout />,
     children: [
       {
         path: '/',
