@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "esnext", // Target the latest ECMAScript version
+    "module": "esnext", // Use ES Modules
+    "moduleResolution": "node", // Resolves modules like Node.js
+    "baseUrl": "./", // Set the base directory for relative imports
+    "paths": {
+      "@/*": ["src/*"] // Example: Alias for src folder
+    },
+    "jsx": "react-jsx" // Enable JSX support for React 17+ JSX transform
+  },
+  "include": ["src/**/*"] // Include all files in the src folder
+}
