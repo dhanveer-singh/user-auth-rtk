@@ -3,7 +3,7 @@ import { Tooltip, Box } from '@mui/material';
 const HoverTooltip = ({ title, children, placement, arrow }) => {
   return (
     <Tooltip
-      title={title}
+      title={title || 'Title'}
       placement={placement || 'right'}
       arrow={arrow || false}
     >

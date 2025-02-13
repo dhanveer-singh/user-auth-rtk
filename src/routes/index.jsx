@@ -6,6 +6,7 @@ import MainLayout from '@/components/layouts/mainLayout';
 import Signup from '@/pages/auth/signup/signup';
 import Dashboard from '@/pages/dashboard/dashboard';
 import Error404 from '@/pages/maintenance/Error404';
+import Profile from '@/pages/profile';
 import Users from '@/pages/users/users';
 import FRONTEND_ROUTES from '@/utils/constants/frontend-routes';
 import PrivateRoute from '@/utils/route-guard/privateRoutes';
@@ -13,11 +14,10 @@ import PrivateRoute from '@/utils/route-guard/privateRoutes';
 const AppRoutes = createBrowserRouter([
   // Redirect from '/' to '/auth/signin'
   {
-    path: '/',
-    element: <Navigate to='/auth/signin' />,
+    path: FRONTEND_ROUTES.ROOT_PATH,
+    element: <Navigate to={`/${FRONTEND_ROUTES.AUTH.SIGNIN}`} />,
   },
   {
-    path: '/auth',
     element: <AuthLayout />,
     children: [
       {
@@ -31,7 +31,7 @@ const AppRoutes = createBrowserRouter([
     ],
   },
   {
-    path: '/',
+    path: FRONTEND_ROUTES.ROOT_PATH,
     element: <MainLayout />,
     children: [
       {
@@ -47,6 +47,14 @@ const AppRoutes = createBrowserRouter([
         element: (
           <PrivateRoute>
             <Users />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: FRONTEND_ROUTES.PROFILE,
+        element: (
+          <PrivateRoute>
+            <Profile />
           </PrivateRoute>
         ),
       },

@@ -64,28 +64,33 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           justifyContent: isOpen ? 'space-between' : 'center',
         }}
       >
-        <Box
-          sx={{
-            ...flexCenter,
-            gap: 2,
-          }}
-        >
-          <HoverTooltip title={'User Auth'}>
+        <HoverTooltip title={'User Auth'}>
+          <Box
+            sx={{
+              ...flexCenter,
+              gap: 2,
+            }}
+          >
             <Security />
-          </HoverTooltip>
-          {isOpen ? (
-            <Typography variant='h6' fontWeight='bold'>
-              User Auth
-            </Typography>
-          ) : (
-            ''
-          )}
-        </Box>
+            {isOpen ? (
+              <Typography variant='h6' fontWeight='bold'>
+                User Auth
+              </Typography>
+            ) : (
+              ''
+            )}
+          </Box>
+        </HoverTooltip>
 
         {isMobile && isOpen && (
+          <HoverTooltip
+          title={'Collapse Menu'}
+          placement={'bottom'}
+        >
           <IconButton onClick={toggleSidebar} sx={{ color: 'white' }}>
             <Close />
           </IconButton>
+        </HoverTooltip>
         )}
       </Box>
 

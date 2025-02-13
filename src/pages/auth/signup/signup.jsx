@@ -17,8 +17,8 @@ import * as yup from 'yup';
 
 import InputField from '@/components/formFields/inputField';
 import { useSignupMutation } from '@/services/auth/authCreateApi';
+import FRONTEND_ROUTES from '@/utils/constants/frontend-routes';
 
-// Define validation schema using Yup
 const validationSchema = yup
   .object({
     name: yup.string().required('Full Name is required'),
@@ -29,7 +29,7 @@ const validationSchema = yup
     password: yup
       .string()
       .min(6, 'Password should be at least 6 characters')
-      .matches(/^\S*$/, 'Password cannot contain spaces') // No spaces allowed
+      .matches(/^\S*$/, 'Password cannot contain spaces')
       .required('Password is required'),
     confirmPassword: yup
       .string()
@@ -89,7 +89,6 @@ const SignUp = () => {
         </Typography>
 
         <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
-          {/* Full Name Input */}
           <Controller
             name='name'
             control={control}
@@ -107,7 +106,6 @@ const SignUp = () => {
             )}
           />
 
-          {/* Email Input */}
           <Controller
             name='email'
             control={control}
@@ -125,7 +123,6 @@ const SignUp = () => {
             )}
           />
 
-          {/* Password Input */}
           <Controller
             name='password'
             control={control}
@@ -152,7 +149,6 @@ const SignUp = () => {
             )}
           />
 
-          {/* Confirm Password Input */}
           <Controller
             name='confirmPassword'
             control={control}
@@ -179,7 +175,6 @@ const SignUp = () => {
             )}
           />
 
-          {/* Submit Button */}
           <Button
             type='submit'
             fullWidth
@@ -195,18 +190,16 @@ const SignUp = () => {
             )}
           </Button>
 
-          {/* Link to Forgot Password */}
           <Box sx={{ textAlign: 'center' }}>
             <Link to={'#'} variant='body2'>
               Forgot password?
             </Link>
           </Box>
 
-          {/* Link to Sign In */}
           <Box sx={{ textAlign: 'center', marginTop: 2 }}>
             <Typography variant='body2'>
               Already have an account?{' '}
-              <Link to={'/auth/signin'} variant='body2'>
+              <Link to={`/${FRONTEND_ROUTES.AUTH.SIGNIN}`} variant='body2'>
                 Sign In
               </Link>
             </Typography>

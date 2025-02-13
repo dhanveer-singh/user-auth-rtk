@@ -194,7 +194,7 @@ const SignIn = () => {
           <Box sx={{ textAlign: 'center', marginTop: 2 }}>
             <Typography variant='body2'>
               Don’t have an account?{' '}
-              <Link to={'/auth/signup'} variant='body2'>
+              <Link to={`/${FRONTEND_ROUTES.AUTH.SIGNUP}`} variant='body2'>
                 Signup
               </Link>
             </Typography>

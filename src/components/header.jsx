@@ -8,7 +8,7 @@ import {
   ExpandMore,
   AccountCircle,
   ExitToApp,
-  Close,
+  MenuOpen,
 } from '@mui/icons-material';
 import {
   AppBar,
@@ -25,8 +25,11 @@ import {
 } from '@mui/material';
 import { deepOrange } from '@mui/material/colors';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 
+import HoverTooltip from './tooltip';
 import { clearUser } from '@/services/auth/authSlice';
+import FRONTEND_ROUTES from '@/utils/constants/frontend-routes';
 
 const Header = ({
   isSidebarOpen,
@@ -60,20 +63,26 @@ const Header = ({
       }}
     >
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <IconButton color='inherit' onClick={toggleSidebar}>
-          {isOpen ? <MenuIcon /> : <Close />}
-        </IconButton>
+        <HoverTooltip
+          title={isOpen ? 'Collapse Menu' : 'Expand Menu'}
+          placement={'bottom'}
+        >
+          <IconButton color='inherit' onClick={toggleSidebar}>
+            {isOpen ?  <MenuOpen /> : <MenuIcon />}
+          </IconButton>
+        </HoverTooltip>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <IconButton onClick={toggleTheme} color='inherit'>
             {darkMode ? <LightMode /> : <DarkMode />}
           </IconButton>
-
-          <IconButton color='inherit'>
-            <Badge badgeContent={3} color='error'>
-              <Notifications />
-            </Badge>
-          </IconButton>
+          <HoverTooltip title={'Notification'} placement={'bottom'}>
+            <IconButton color='inherit'>
+              <Badge badgeContent={3} color='error'>
+                <Notifications />
+              </Badge>
+            </IconButton>
+          </HoverTooltip>
 
           <Box
             sx={{
@@ -97,18 +106,26 @@ const Header = ({
               <Typography variant='body1'>Welcome, {user?.name}!</Typography>
             </MenuItem>
             <Divider />
-            <MenuItem onClick={handleMenuClose}>
-              <ListItemIcon>
-                <AccountCircle fontSize='small' />
-              </ListItemIcon>
-              Profile
-            </MenuItem>
-            <MenuItem onClick={handleLogout}>
-              <ListItemIcon>
-                <ExitToApp fontSize='small' />
-              </ListItemIcon>
-              Logout
-            </MenuItem>
+            <HoverTooltip title={'Profile'} placement={'top'}>
+              <MenuItem
+                component={Link}
+                to={FRONTEND_ROUTES.PROFILE}
+                onClick={handleMenuClose}
+              >
+                <ListItemIcon>
+                  <AccountCircle fontSize='small' />
+                </ListItemIcon>
+                Profile
+              </MenuItem>
+            </HoverTooltip>
+            <HoverTooltip title={'Profile'} placement={'top'}>
+              <MenuItem onClick={handleLogout}>
+                <ListItemIcon>
+                  <ExitToApp fontSize='small' />
+                </ListItemIcon>
+                Logout
+              </MenuItem>
+            </HoverTooltip>
           </Menu>
         </Box>
       </Toolbar>
