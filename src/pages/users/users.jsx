@@ -34,7 +34,7 @@ const users = () => {
   return (
     <Box>
       <Typography variant='h4' component='h5'>
-        User List
+        Users
       </Typography>
     </Box>
   );

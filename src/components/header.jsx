@@ -8,6 +8,7 @@ import {
   ExpandMore,
   AccountCircle,
   ExitToApp,
+  Close,
 } from '@mui/icons-material';
 import {
   AppBar,
@@ -27,7 +28,13 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { clearUser } from '@/services/auth/authSlice';
 
-const Header = ({ isSidebarOpen, toggleSidebar, darkMode, toggleTheme }) => {
+const Header = ({
+  isSidebarOpen,
+  isOpen,
+  toggleSidebar,
+  darkMode,
+  toggleTheme,
+}) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
@@ -54,7 +61,7 @@ const Header = ({ isSidebarOpen, toggleSidebar, darkMode, toggleTheme }) => {
     >
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <IconButton color='inherit' onClick={toggleSidebar}>
-          <MenuIcon />
+          {isOpen ? <MenuIcon /> : <Close />}
         </IconButton>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>

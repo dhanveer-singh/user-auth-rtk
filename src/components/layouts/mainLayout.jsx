@@ -10,7 +10,6 @@ import Sidebar from '../sidebar';
 const MainLayout = () => {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);
-
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
   return (
@@ -26,7 +25,7 @@ const MainLayout = () => {
           flexDirection: 'column',
         }}
       >
-        <Header toggleSidebar={toggleSidebar} />
+        <Header isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
         {/* Content Area */}
         <Box
