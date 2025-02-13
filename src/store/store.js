@@ -4,7 +4,6 @@ import storage from 'redux-persist/lib/storage';
 
 import { apiService } from '../services/auth/authCreateApi';
 import authReducer from '../services/auth/authSlice';
-import snackbarReducer from '@/services/snackbarSlice';
 
 const persistConfig = {
   key: 'root',
@@ -22,7 +21,6 @@ export const store = configureStore({
   reducer: {
     [apiService.reducerPath]: apiService.reducer,
     persistedReducer, // use the persisted reducer
-    snackbar: snackbarReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

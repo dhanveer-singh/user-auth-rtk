@@ -1,16 +1,15 @@
 import { createTheme } from '@mui/material/styles';
 
-// Create a custom theme
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2', // Blue color
+      main: '#1976d2',
     },
     secondary: {
-      main: '#dc004e', // Pink color
+      main: '#dc004e',
     },
     background: {
-      default: '#f4f4f4', // Background color
+      default: '#f4f4f4',
     },
   },
   typography: {

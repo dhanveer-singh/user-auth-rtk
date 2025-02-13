@@ -8,13 +8,13 @@ const PrivateRoute = ({ children }) => {
   const dispatch = useDispatch();
 
   const auth = useSelector((state) => state?.persistedReducer?.auth);
-  const { isAuthenticated } = auth;
+  const { token } = auth;
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!token) {
       navigate('/', { replace: true });
     }
-  }, [isAuthenticated, dispatch, navigate]);
+  }, [token, dispatch, navigate]);
 
   return children;
 };

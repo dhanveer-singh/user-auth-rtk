@@ -1,7 +1,7 @@
 import { Typography, Box, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-const NotFound = () => {
+const Error404 = () => {
   return (
     <Box sx={{ textAlign: 'center', padding: 4 }}>
       <Typography variant='h4' color='error' gutterBottom>
@@ -17,4 +17,4 @@ const NotFound = () => {
   );
 };
 
-export default NotFound;
+export default Error404;

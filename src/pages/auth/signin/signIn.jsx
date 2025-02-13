@@ -19,18 +19,17 @@ import * as yup from 'yup';
 import InputField from '@/components/formFields/inputField';
 import { useLoginMutation } from '@/services/auth/authCreateApi';
 import { setUser } from '@/services/auth/authSlice';
+import FRONTEND_ROUTES from '@/utils/constants/frontend-routes';
 
 // Define the validation schema using Yup
 const validationSchema = yup
   .object({
-    email: yup
-      .string()
-      .email('Enter a valid email address')
-      .required('Email is required'),
-    password: yup
-      .string()
-      .min(6, 'Password should be at least 6 characters')
-      .required('Password is required'),
+    email: yup.string(),
+    // .email('Enter a valid email address')
+    // .required('Email is required'),
+    password: yup.string(),
+    // .min(6, 'Password should be at least 6 characters')
+    // .required('Password is required'),
   })
   .required();
 
@@ -48,7 +47,8 @@ const SignIn = () => {
     control,
     handleSubmit,
     reset,
-    formState: { errors, isValid },
+    setError,
+    formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
@@ -56,19 +56,43 @@ const SignIn = () => {
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const inputType = showPassword ? 'text' : 'password';
 
+  const isObject = (value) =>
+    typeof value === 'object' && value !== null && !Array.isArray(value);
+
   const onSubmit = async (data) => {
     try {
       const response = await login(data).unwrap();
-      console.log('Login successful:', response);
-      dispatch(
-        setUser({
-          user: response?.data?.user?.email,
-          token: response?.data?.token,
-        })
-      );
 
-      response?.success && navigate('/dashboard');
-      reset();
+      console.log('Login successful: $$$$$$$$$$', response);
+
+      if (response.success) {
+        dispatch(
+          setUser({
+            user: {
+              email: response?.data?.user?.email,
+              name: response?.data?.user?.name,
+            },
+            token: response?.data?.token,
+          })
+        );
+        response?.success && navigate(FRONTEND_ROUTES.DASHBOARD);
+        reset();
+      } else {
+        if (isObject(response.errors)) {
+          // let tempError = {};
+          console.log('response.errorsresponse.errors', response.errors);
+          Object.keys(response.errors).forEach((errorKey) => {
+            console.log('errorKey', errorKey);
+
+            setError(errorKey, {
+              type: 'server',
+              message: response.errors[errorKey].join(','), // The error message from the server
+            });
+          });
+
+          // setError([tempError]);
+        }
+      }
     } catch (err) {
       console.error('Login failed:', err);
     }
@@ -142,7 +166,7 @@ const SignIn = () => {
             variant='contained'
             color='primary'
             sx={{ marginBottom: 2 }}
-            disabled={isLoading || !isValid}
+            // disabled={isLoading || !isValid}
           >
             {isLoading ? (
               <CircularProgress size={24} sx={{ color: 'white' }} />
@@ -170,7 +194,7 @@ const SignIn = () => {
           <Box sx={{ textAlign: 'center', marginTop: 2 }}>
             <Typography variant='body2'>
               Don’t have an account?{' '}
-              <Link to={'/signup'} variant='body2'>
+              <Link to={'/auth/signup'} variant='body2'>
                 Signup
               </Link>
             </Typography>

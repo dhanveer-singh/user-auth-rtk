@@ -1,11 +1,9 @@
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const customFetchBaseQuery = ({ baseUrl }) => {
-  // Create a base query using fetchBaseQuery
   const baseQuery = fetchBaseQuery({ baseUrl });
 
   return async (args, api, extraOptions) => {
-    // Access the token from the Redux state
     const token = api.getState().auth?.token; // Assuming `auth` slice contains the `token`
 
     // Ensure headers are present in the request
@@ -19,20 +17,23 @@ const customFetchBaseQuery = ({ baseUrl }) => {
     }
 
     try {
-      // Make the API call using the base query
       const result = await baseQuery(args, api, extraOptions);
-      console.log('result', result);
-      // Check if response is successful
+
+      console.log('###################result', result);
+
       if (result.meta?.response?.ok) {
-        // If response is successful, check if it has 'success' in the response body
+        // This check is for weather the HTTP request itself was successful.
+        // This means the HTTP request was successful (status code 2xx)
+
         if (result?.data?.success) {
+          //
           // Return the custom success response
           return {
             ...result,
             data: {
-              success: true,
+              data: result?.data?.data,
               message: result.data.message,
-              data: result.data.data,
+              success: true,
             },
             // <===============OUTPUT===============>
             // {
@@ -48,16 +49,26 @@ const customFetchBaseQuery = ({ baseUrl }) => {
             //     }
             // }
           };
-        } else {
-          // If 'success' is false in the response, treat it as an error
-          return {
-            error: {
-              success: false,
-              status: result.error?.originalStatus || 500,
-              message: result.data?.message || 'An error occurred',
-            },
-          };
         }
+        // else {
+        //   // If 'success' is false in the response, treat it as an error
+        //   return {
+        //     error: {
+        //       success: false,
+        //       status: result.error?.originalStatus || 500,
+        //       message: result.data?.message || 'An error occurred',
+        //     },
+        //   };
+        // }
+      } else {
+        return {
+          data: {
+            success: false,
+            // errors: result?.error?.data?.fieldErrors || result?.error?.data?.message
+            errors: result?.error?.data?.errors,
+            message: result?.error?.data?.message,
+          },
+        };
       }
 
       // Handle HTTP Error (non-2xx status codes)

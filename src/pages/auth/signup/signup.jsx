@@ -206,7 +206,7 @@ const SignUp = () => {
           <Box sx={{ textAlign: 'center', marginTop: 2 }}>
             <Typography variant='body2'>
               Already have an account?{' '}
-              <Link to={'/'} variant='body2'>
+              <Link to={'/auth/signin'} variant='body2'>
                 Sign In
               </Link>
             </Typography>

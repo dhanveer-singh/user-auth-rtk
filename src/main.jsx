@@ -6,11 +6,11 @@ import { Provider } from 'react-redux';
 import { RouterProvider } from 'react-router';
 import { PersistGate } from 'redux-persist/integration/react';
 
-import './index.css';
-import AppSnackbar from './components/snackBar';
+import theme from './assets/styles/theme.js';
 import router from './routes/index';
 import { store, persistStor } from './store/store';
-import theme from './theme.js';
+
+import './assets/styles/global.css';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -19,7 +19,6 @@ createRoot(document.getElementById('root')).render(
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <RouterProvider router={router}></RouterProvider>
-          <AppSnackbar />
         </ThemeProvider>
       </PersistGate>
     </Provider>

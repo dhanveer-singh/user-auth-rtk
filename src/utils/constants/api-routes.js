@@ -1,17 +1,17 @@
 const API = '/api';
 
 const AUTH = {
-    SIGNIN: `${API}/login`,
-    SIGNUP: `${API}/signup`,
+  SIGNIN: `${API}/login`,
+  SIGNUP: `${API}/signup`,
 };
 
 const USERS = {
-    GET_USERS: `${API}/users`,
-    MY_PROFILE: `${API}/me`,
-}
+  GET_USERS: `${API}/users`,
+  MY_PROFILE: `${API}/me`,
+};
 const APIS = {
   AUTH,
-  USERS
+  USERS,
 };
 
 export default APIS;

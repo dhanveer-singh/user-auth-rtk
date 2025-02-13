@@ -1,16 +1,23 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 import App from '@/App';
-import NotFound from '@/components/notFound';
-import AuthLayout from '@/layouts/authLayout';
+import AuthLayout from '@/components/layouts/authLayout';
+import MainLayout from '@/components/layouts/mainLayout';
 import Signup from '@/pages/auth/signup/signup';
 import Dashboard from '@/pages/dashboard/dashboard';
+import Error404 from '@/pages/maintenance/Error404';
+import Users from '@/pages/users/users';
 import FRONTEND_ROUTES from '@/utils/constants/frontend-routes';
 import PrivateRoute from '@/utils/route-guard/privateRoutes';
 
 const AppRoutes = createBrowserRouter([
+  // Redirect from '/' to '/auth/signin'
   {
     path: '/',
+    element: <Navigate to='/auth/signin' />,
+  },
+  {
+    path: '/auth',
     element: <AuthLayout />,
     children: [
       {
@@ -24,16 +31,30 @@ const AppRoutes = createBrowserRouter([
     ],
   },
   {
-    path: FRONTEND_ROUTES.DASHBOARD,
-    element: (
-      <PrivateRoute>
-        <Dashboard />
-      </PrivateRoute>
-    ),
+    path: '/',
+    element: <MainLayout />,
+    children: [
+      {
+        path: FRONTEND_ROUTES.DASHBOARD,
+        element: (
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: FRONTEND_ROUTES.USERS,
+        element: (
+          <PrivateRoute>
+            <Users />
+          </PrivateRoute>
+        ),
+      },
+    ],
   },
   {
     path: '*',
-    element: <NotFound />,
+    element: <Error404 />,
   },
 ]);
 export default AppRoutes;
