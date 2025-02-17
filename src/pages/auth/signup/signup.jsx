@@ -35,13 +35,16 @@ const validationSchema = yup
       .required('Email is required'),
     password: yup
       .string()
+      .required('Password is required')
       .min(6, 'Password should be at least 6 characters')
-      .matches(/^\S*$/, 'Password cannot contain spaces')
-      .required('Password is required'),
+      .matches(/^\S*$/, 'Password cannot contain spaces'),
     confirmPassword: yup
       .string()
-      .oneOf([yup.ref('password'), null], 'Passwords must match')
-      .required('Confirm Password is required'),
+      .required('Confirm Password is required')
+      .oneOf(
+        [yup.ref('password'), null],
+        'Confirm passwords must match with password'
+      ),
   })
   .required();
 
@@ -82,7 +85,7 @@ const SignUp = () => {
 
       if (response?.success) {
         showToast.success('Account created successfully!');
-        navigate(`/${FRONTEND_ROUTES.AUTH.SIGNIN}`);
+        navigate(FRONTEND_ROUTES.AUTH.SIGNIN);
       } else {
         console.log(errors, { response });
 
@@ -230,16 +233,10 @@ const SignUp = () => {
             )}
           </Button>
 
-          <Box sx={{ textAlign: 'center' }}>
-            <Link to={'#'} variant='body2'>
-              Forgot password?
-            </Link>
-          </Box>
-
           <Box sx={{ textAlign: 'center', marginTop: 2 }}>
             <Typography variant='body2'>
               Already have an account?{' '}
-              <Link to={`/${FRONTEND_ROUTES.AUTH.SIGNIN}`} variant='body2'>
+              <Link to={FRONTEND_ROUTES.AUTH.SIGNIN} variant='body2'>
                 Sign In
               </Link>
             </Typography>

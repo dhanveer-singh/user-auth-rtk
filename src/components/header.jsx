@@ -30,6 +30,7 @@ import { Link } from 'react-router-dom';
 import HoverTooltip from './tooltip';
 import { clearUser } from '@/services/auth/authSlice';
 import FRONTEND_ROUTES from '@/utils/constants/frontend-routes';
+import { showToast } from '@/utils/toast';
 
 const Header = ({
   isSidebarOpen,
@@ -48,6 +49,7 @@ const Header = ({
 
   const handleLogout = () => {
     dispatch(clearUser());
+    showToast.success('You have logged out successfully!');
   };
   return (
     <AppBar

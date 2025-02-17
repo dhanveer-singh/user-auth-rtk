@@ -1,5 +1,5 @@
 import { Delete } from '@mui/icons-material';
-import { Box, CircularProgress, IconButton, Typography } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
 import Swal from 'sweetalert2';
 
 import CardWrapper from '@/components/cards';
@@ -12,10 +12,7 @@ import {
 
 const Users = () => {
   const [deleteUser] = useDeleteUserMutation();
-  const { data, error, isLoading } = useGetUsersQuery({ page: 1, limit: 10 });
-  
-  if (isLoading) return <CircularProgress />;
-  if (error) return <Typography color='error'>Error fetching users</Typography>;
+  const { data, isLoading } = useGetUsersQuery({ page: 1, limit: 10 });
 
   const handleDelete = async (id) => {
     const confirm = await Swal.fire({
@@ -31,7 +28,13 @@ const Users = () => {
     if (confirm.isConfirmed) {
       try {
         await deleteUser(id).unwrap();
-        Swal.fire('Deleted!', 'User has been deleted.', 'success');
+        Swal.fire({
+          title: 'Deleted!',
+          text: 'User has been deleted.',
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false,
+        });
       } catch (error) {
         Swal.fire('Error', 'Failed to delete user.', error);
       }

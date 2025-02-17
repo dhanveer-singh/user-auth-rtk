@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import App from '@/App';
 import AuthLayout from '@/components/layouts/authLayout';
 import MainLayout from '@/components/layouts/mainLayout';
+import ForgotPassword from '@/pages/auth/forgotPassword';
 import Signup from '@/pages/auth/signup/signup';
 import Dashboard from '@/pages/dashboard/dashboard';
 import Error404 from '@/pages/maintenance/Error404';
@@ -12,10 +13,10 @@ import FRONTEND_ROUTES from '@/utils/constants/frontend-routes';
 import PrivateRoute from '@/utils/route-guard/privateRoutes';
 
 const AppRoutes = createBrowserRouter([
-  // Redirect from '/' to '/auth/signin'
   {
+    // Redirect from '/' to '/auth/signin'
     path: FRONTEND_ROUTES.ROOT_PATH,
-    element: <Navigate to={`/${FRONTEND_ROUTES.AUTH.SIGNIN}`} />,
+    element: <Navigate to={FRONTEND_ROUTES.AUTH.SIGNIN} />,
   },
   {
     element: <AuthLayout />,
@@ -27,6 +28,10 @@ const AppRoutes = createBrowserRouter([
       {
         path: FRONTEND_ROUTES.AUTH.SIGNUP,
         element: <Signup />,
+      },
+      {
+        path: FRONTEND_ROUTES.AUTH.FORGOT_PASSWORD,
+        element: <ForgotPassword />,
       },
     ],
   },

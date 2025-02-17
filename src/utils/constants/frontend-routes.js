@@ -1,11 +1,12 @@
-const ROOT_PATH = '/';
-const DASHBOARD = '/dashboard';
-const USERS = '/users';
-const PROFILE = '/profile';
+const ROOT_PATH = `/`;
+const DASHBOARD = `${ROOT_PATH}dashboard`;
+const USERS = `${ROOT_PATH}users`;
+const PROFILE = `${ROOT_PATH}profile`;
 
 const AUTH = {
-  SIGNIN: 'signin',
-  SIGNUP: 'signup',
+  SIGNIN: `${ROOT_PATH}signin`,
+  SIGNUP: `${ROOT_PATH}signup`,
+  FORGOT_PASSWORD: `${ROOT_PATH}forgot-password`,
 };
 
 const FRONTEND_ROUTES = {

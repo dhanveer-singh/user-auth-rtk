@@ -21,6 +21,7 @@ import InputField from '@/components/formFields/inputField';
 import { useLoginMutation } from '@/services/auth/authCreateApi';
 import { setUser } from '@/services/auth/authSlice';
 import FRONTEND_ROUTES from '@/utils/constants/frontend-routes';
+import { showToast } from '@/utils/toast';
 
 // Define the validation schema using Yup
 const validationSchema = yup
@@ -54,6 +55,10 @@ const SignIn = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   });
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
@@ -66,6 +71,7 @@ const SignIn = () => {
     try {
       const response = await login(data).unwrap();
       if (response.success) {
+        showToast.success(response?.message);
         dispatch(
           setUser({
             user: {
@@ -78,16 +84,21 @@ const SignIn = () => {
         response?.success && navigate(FRONTEND_ROUTES.DASHBOARD);
         reset();
       } else {
-        if (isObject(response.errors)) {
+        if (
+          isObject(response.errors) &&
+          Object.keys(response.formFieldErrors).length
+        ) {
           console.log('response.errorsresponse.errors', response.errors);
           Object.keys(response.errors).forEach((errorKey) => {
             console.log('errorKey', errorKey);
 
             setError(errorKey, {
               type: 'server',
-              message: response.errors[errorKey].join(','), // The error message from the server
+              message: response.errors[errorKey].join(','),
             });
           });
+        } else {
+          showToast.error(response?.message || 'Invalid credentials');
         }
       }
     } catch (err) {
@@ -183,7 +194,7 @@ const SignIn = () => {
           )}
 
           <Box sx={{ textAlign: 'center' }}>
-            <Link to={'#'} variant='body2'>
+            <Link to={FRONTEND_ROUTES.AUTH.FORGOT_PASSWORD} variant='body2'>
               Forgot password?
             </Link>
           </Box>
@@ -191,7 +202,7 @@ const SignIn = () => {
           <Box sx={{ textAlign: 'center', marginTop: 2 }}>
             <Typography variant='body2'>
               Don’t have an account?{' '}
-              <Link to={`/${FRONTEND_ROUTES.AUTH.SIGNUP}`} variant='body2'>
+              <Link to={FRONTEND_ROUTES.AUTH.SIGNUP} variant='body2'>
                 Signup
               </Link>
             </Typography>

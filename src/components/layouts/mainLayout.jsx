@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Box, useMediaQuery } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 
-import Footer from '../footer';
+// import Footer from '../footer';
 import Header from '../header';
 import Sidebar from '../sidebar';
 
@@ -41,7 +41,7 @@ const MainLayout = () => {
           <Outlet />
         </Box>
 
-        <Footer />
+        {/* <Footer /> */}
       </Box>
     </Box>
   );
