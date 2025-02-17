@@ -68,7 +68,7 @@ const Header = ({
           placement={'bottom'}
         >
           <IconButton color='inherit' onClick={toggleSidebar}>
-            {isOpen ?  <MenuOpen /> : <MenuIcon />}
+            {isOpen ? <MenuOpen /> : <MenuIcon />}
           </IconButton>
         </HoverTooltip>
 

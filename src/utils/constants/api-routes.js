@@ -8,6 +8,7 @@ const AUTH = {
 const USERS = {
   GET_USERS: `${API}/users`,
   MY_PROFILE: `${API}/me`,
+  DELETE_USER: `${API}/user/`,
 };
 const APIS = {
   AUTH,

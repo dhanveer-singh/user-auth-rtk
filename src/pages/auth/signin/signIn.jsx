@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { DevTool } from '@hookform/devtools';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
@@ -24,12 +25,14 @@ import FRONTEND_ROUTES from '@/utils/constants/frontend-routes';
 // Define the validation schema using Yup
 const validationSchema = yup
   .object({
-    email: yup.string(),
-    // .email('Enter a valid email address')
-    // .required('Email is required'),
-    password: yup.string(),
-    // .min(6, 'Password should be at least 6 characters')
-    // .required('Password is required'),
+    email: yup
+      .string()
+      .email('Enter a valid email address')
+      .required('Email is required'),
+    password: yup
+      .string()
+      .required('Password is required')
+      .min(6, 'Password should be at least 6 characters'),
   })
   .required();
 
@@ -62,9 +65,6 @@ const SignIn = () => {
   const onSubmit = async (data) => {
     try {
       const response = await login(data).unwrap();
-
-      console.log('Login successful: $$$$$$$$$$', response);
-
       if (response.success) {
         dispatch(
           setUser({
@@ -79,7 +79,6 @@ const SignIn = () => {
         reset();
       } else {
         if (isObject(response.errors)) {
-          // let tempError = {};
           console.log('response.errorsresponse.errors', response.errors);
           Object.keys(response.errors).forEach((errorKey) => {
             console.log('errorKey', errorKey);
@@ -89,8 +88,6 @@ const SignIn = () => {
               message: response.errors[errorKey].join(','), // The error message from the server
             });
           });
-
-          // setError([tempError]);
         }
       }
     } catch (err) {
@@ -111,7 +108,7 @@ const SignIn = () => {
           boxShadow: 3,
         }}
       >
-        <Typography variant='h5' sx={{ marginBottom: 2 }}>
+        <Typography variant='h5' fontWeight='bold' sx={{ marginBottom: 2 }}>
           Login
         </Typography>
 
@@ -200,6 +197,7 @@ const SignIn = () => {
             </Typography>
           </Box>
         </form>
+        <DevTool control={control} />
       </Box>
     </Container>
   );

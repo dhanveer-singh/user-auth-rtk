@@ -83,14 +83,11 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         </HoverTooltip>
 
         {isMobile && isOpen && (
-          <HoverTooltip
-          title={'Collapse Menu'}
-          placement={'bottom'}
-        >
-          <IconButton onClick={toggleSidebar} sx={{ color: 'white' }}>
-            <Close />
-          </IconButton>
-        </HoverTooltip>
+          <HoverTooltip title={'Collapse Menu'} placement={'bottom'}>
+            <IconButton onClick={toggleSidebar} sx={{ color: 'white' }}>
+              <Close />
+            </IconButton>
+          </HoverTooltip>
         )}
       </Box>
 

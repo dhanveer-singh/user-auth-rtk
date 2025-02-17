@@ -9,12 +9,13 @@ const baseUrl = 'https://users-auth-mern.onrender.com';
 export const apiService = createApi({
   reducerPath: 'authApi',
   baseQuery: customFetchBaseQuery({ baseUrl }),
+  tagTypes: ['User'],
   endpoints: (builder) => ({
     login: builder.mutation({
-      query: (credentials) => ({
+      query: (payload) => ({
         url: APIS.AUTH.SIGNIN,
         method: 'POST',
-        body: credentials,
+        body: payload,
       }),
     }),
 
@@ -32,6 +33,7 @@ export const apiService = createApi({
         method: 'GET',
         params: { page, limit },
       }),
+      providesTags: ['User'],
     }),
 
     getMe: builder.query({
@@ -39,6 +41,14 @@ export const apiService = createApi({
         url: APIS.USERS.MY_PROFILE,
         method: 'GET',
       }),
+    }),
+
+    deleteUser: builder.mutation({
+      query: (userId) => ({
+        url: `${APIS.USERS.DELETE_USER}/${userId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Users'],
     }),
   }),
 });
@@ -49,4 +59,5 @@ export const {
   useSignupMutation,
   useGetUsersQuery,
   useGetMeQuery,
+  useDeleteUserMutation,
 } = apiService;

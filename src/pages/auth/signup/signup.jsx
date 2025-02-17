@@ -13,6 +13,7 @@ import {
 import { useTheme } from '@mui/material/styles';
 import { useForm, Controller } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import * as yup from 'yup';
 
 import InputField from '@/components/formFields/inputField';
@@ -21,20 +22,22 @@ import FRONTEND_ROUTES from '@/utils/constants/frontend-routes';
 
 const validationSchema = yup
   .object({
-    name: yup.string().required('Full Name is required'),
-    email: yup
-      .string()
-      .email('Enter a valid email address')
-      .required('Email is required'),
-    password: yup
-      .string()
-      .min(6, 'Password should be at least 6 characters')
-      .matches(/^\S*$/, 'Password cannot contain spaces')
-      .required('Password is required'),
+    name: yup.string()
+    .required('Full Name is required')
+    .min(3, 'Name must be at least 3 characters')
+    .max(30, 'Name cannot exceed 50 characters')
+    .matches(/^[a-zA-Z\s]+$/, 'Name can only contain letters and spaces'),
+    email: yup.string(),
+    // .email('Enter a valid email address')
+    // .required('Email is required'),
+    password: yup.string(),
+    // .min(6, 'Password should be at least 6 characters')
+    // .matches(/^\S*$/, 'Password cannot contain spaces')
+    // .required('Password is required'),
     confirmPassword: yup
       .string()
-      .oneOf([yup.ref('password'), null], 'Passwords must match')
-      .required('Confirm Password is required'),
+      .oneOf([yup.ref('password'), null], 'Passwords must match'),
+    // .required('Confirm Password is required'),
   })
   .required();
 
@@ -47,6 +50,7 @@ const SignUp = () => {
 
   const {
     control,
+    setError,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -65,14 +69,48 @@ const SignUp = () => {
   const inputType = showPassword ? 'text' : 'password';
   const confirmPasswordType = showConfirmPassword ? 'text' : 'password';
 
+  const isObject = (value) => typeof value === 'object' && value !== null && !Array.isArray(value);
+
   const onSubmit = async (data) => {
-    const response = await signup(data).unwrap();
-    console.log('Signing up with:', response, error);
-    response?.success && navigate('/');
+    try {
+      const response = await signup(data).unwrap();
+      if (response?.success) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Account Created',
+          text: 'You have successfully signed up!',
+          timer: 2000,
+          timerProgressBar: true,
+          showConfirmButton: false,
+        });
+        navigate(`/${FRONTEND_ROUTES.AUTH.SIGNIN}`);
+      } else {
+        console.log(errors, {response});
+        
+        if (isObject(response.formFieldErrors)) {
+          console.log('response.errorsresponse.errors', response.formFieldErrors);
+          Object.keys(response.formFieldErrors).forEach((errorKey) => {
+            setError(errorKey, {
+              type: 'server',
+              message: response.formFieldErrors[errorKey].join(','), // The error message from the server
+            });
+          });
+        }
+      }
+    } catch (err) {
+      console.error('🚨 Signup Error:', err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Signup Failed',
+        text:
+          err?.data?.message ||
+          'An unexpected error occurred. Please try again later.',
+      });
+    }
   };
 
   return (
-    <Container component='main' maxWidth='xs' sx={{ padding: 4 }}>
+    <Container component='main' maxWidth='xs' sx={{ mt: 2 }}>
       <Box
         sx={{
           display: 'flex',
@@ -84,7 +122,7 @@ const SignUp = () => {
           boxShadow: 3,
         }}
       >
-        <Typography variant='h5' sx={{ marginBottom: 2 }}>
+        <Typography variant='h5' sx={{ marginBottom: 2, fontWeight: 'bold' }}>
           Sign Up
         </Typography>
 
@@ -98,7 +136,6 @@ const SignUp = () => {
                 label='Full Name'
                 type='text'
                 fullWidth
-                sx={{ marginBottom: 2 }}
                 error={!!errors.name}
                 helperText={errors?.name?.message}
                 autoComplete='name'
@@ -115,7 +152,6 @@ const SignUp = () => {
                 label='Email'
                 type='email'
                 fullWidth
-                sx={{ marginBottom: 2 }}
                 error={!!errors.email}
                 helperText={errors?.email?.message}
                 autoComplete='email'
@@ -141,7 +177,6 @@ const SignUp = () => {
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 }
-                sx={{ marginBottom: 2 }}
                 error={!!errors.password}
                 helperText={errors?.password?.message}
                 autoComplete='new-password'

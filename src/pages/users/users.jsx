@@ -1,43 +1,76 @@
-import { Box, Typography } from '@mui/material';
+import { Delete } from '@mui/icons-material';
+import { Box, CircularProgress, IconButton, Typography } from '@mui/material';
+import Swal from 'sweetalert2';
 
-// import { CircularProgress, Typography } from '@mui/material';
+import CardWrapper from '@/components/cards';
+import DataTable from '@/components/dataTable';
+import HoverTooltip from '@/components/tooltip';
+import {
+  useDeleteUserMutation,
+  useGetUsersQuery,
+} from '@/services/auth/authCreateApi';
 
-// import { useGetUsersQuery } from '@/services/auth/authCreateApi';
+const Users = () => {
+  const [deleteUser] = useDeleteUserMutation();
+  const { data, error, isLoading } = useGetUsersQuery({ page: 1, limit: 10 });
+  console.log({ data });
+  if (isLoading) return <CircularProgress />;
+  if (error) return <Typography color='error'>Error fetching users</Typography>;
 
-// const Users = () => {
-//   const { data, error, isLoading } = useGetUsersQuery({ page: 1, limit: 10 });
+  const handleDelete = async (id) => {
+    const confirm = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'This action cannot be undone!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+    });
 
-//   if (isLoading) return <CircularProgress />;
-//   if (error) return <Typography color='error'>Error fetching users</Typography>;
+    if (confirm.isConfirmed) {
+      try {
+        await deleteUser(id).unwrap();
+        Swal.fire('Deleted!', 'User has been deleted.', 'success');
+      } catch (error) {
+        Swal.fire('Error', 'Failed to delete user.', error);
+      }
+    }
+  };
 
-//   return (
-//     <div>
-//       <Typography variant='h4'>User List</Typography>
-//       {data?.users?.length ? (
-//         <ul>
-//           {data?.users?.map((user) => (
-//             <li key={user.id}>
-//               {user.name} - {user.email}
-//             </li>
-//           ))}
-//         </ul>
-//       ) : (
-//         <Typography>No users found</Typography>
-//       )}
-//     </div>
-//   );
-// };
+  const columns = [
+    { field: '_id', headerName: 'ID', width: 220 },
+    { field: 'email', headerName: 'Email', width: 200 },
+    { field: 'name', headerName: 'Name', width: 200 },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      width: 100,
+      renderCell: (params) => (
+        <HoverTooltip title='Delete User' placement='bottom'>
+          <IconButton
+            color='error'
+            onClick={() => handleDelete(params?.row?._id)}
+          >
+            <Delete />
+          </IconButton>
+        </HoverTooltip>
+      ),
+    },
+  ];
 
-// export default Users;
+  const rows = data?.data?.users || [];
 
-const users = () => {
   return (
     <Box>
       <Typography variant='h4' component='h5'>
         Users
       </Typography>
+      <CardWrapper>
+        <DataTable columns={columns} rows={rows} isLoading={isLoading} />
+      </CardWrapper>
     </Box>
   );
 };
 
-export default users;
+export default Users;
