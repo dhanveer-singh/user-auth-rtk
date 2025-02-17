@@ -19,25 +19,29 @@ import * as yup from 'yup';
 import InputField from '@/components/formFields/inputField';
 import { useSignupMutation } from '@/services/auth/authCreateApi';
 import FRONTEND_ROUTES from '@/utils/constants/frontend-routes';
+import { showToast } from '@/utils/toast';
 
 const validationSchema = yup
   .object({
-    name: yup.string()
-    .required('Full Name is required')
-    .min(3, 'Name must be at least 3 characters')
-    .max(30, 'Name cannot exceed 50 characters')
-    .matches(/^[a-zA-Z\s]+$/, 'Name can only contain letters and spaces'),
-    email: yup.string(),
-    // .email('Enter a valid email address')
-    // .required('Email is required'),
-    password: yup.string(),
-    // .min(6, 'Password should be at least 6 characters')
-    // .matches(/^\S*$/, 'Password cannot contain spaces')
-    // .required('Password is required'),
+    name: yup
+      .string()
+      .required('Full Name is required')
+      .min(3, 'Name must be at least 3 characters')
+      .max(30, 'Name cannot exceed 50 characters')
+      .matches(/^[a-zA-Z\s]+$/, 'Name can only contain letters and spaces'),
+    email: yup
+      .string()
+      .email('Enter a valid email address')
+      .required('Email is required'),
+    password: yup
+      .string()
+      .min(6, 'Password should be at least 6 characters')
+      .matches(/^\S*$/, 'Password cannot contain spaces')
+      .required('Password is required'),
     confirmPassword: yup
       .string()
-      .oneOf([yup.ref('password'), null], 'Passwords must match'),
-    // .required('Confirm Password is required'),
+      .oneOf([yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm Password is required'),
   })
   .required();
 
@@ -69,32 +73,33 @@ const SignUp = () => {
   const inputType = showPassword ? 'text' : 'password';
   const confirmPasswordType = showConfirmPassword ? 'text' : 'password';
 
-  const isObject = (value) => typeof value === 'object' && value !== null && !Array.isArray(value);
+  const isObject = (value) =>
+    typeof value === 'object' && value !== null && !Array.isArray(value);
 
   const onSubmit = async (data) => {
     try {
       const response = await signup(data).unwrap();
+
       if (response?.success) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Account Created',
-          text: 'You have successfully signed up!',
-          timer: 2000,
-          timerProgressBar: true,
-          showConfirmButton: false,
-        });
+        showToast.success('Account created successfully!');
         navigate(`/${FRONTEND_ROUTES.AUTH.SIGNIN}`);
       } else {
-        console.log(errors, {response});
-        
-        if (isObject(response.formFieldErrors)) {
-          console.log('response.errorsresponse.errors', response.formFieldErrors);
+        console.log(errors, { response });
+
+        if (
+          isObject(response.formFieldErrors) &&
+          Object.keys(response.formFieldErrors).length
+        ) {
           Object.keys(response.formFieldErrors).forEach((errorKey) => {
             setError(errorKey, {
               type: 'server',
-              message: response.formFieldErrors[errorKey].join(','), // The error message from the server
+              message: response.formFieldErrors[errorKey].join(','),
             });
           });
+        } else {
+          showToast.error(
+            response?.message || 'Signup failed. Please try again.'
+          );
         }
       }
     } catch (err) {

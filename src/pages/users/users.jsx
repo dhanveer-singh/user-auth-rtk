@@ -13,7 +13,7 @@ import {
 const Users = () => {
   const [deleteUser] = useDeleteUserMutation();
   const { data, error, isLoading } = useGetUsersQuery({ page: 1, limit: 10 });
-  console.log({ data });
+  
   if (isLoading) return <CircularProgress />;
   if (error) return <Typography color='error'>Error fetching users</Typography>;
 
