@@ -50,8 +50,8 @@ const Header = ({
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
-  const user = useSelector((state) => state?.authSlice?.user) || {};
-  const currentLanguage = useSelector((state) => state?.language?.lang) || 'en';
+  const user = useSelector((state) => state?.persistedReducer?.authSlice?.user) || {};
+  const currentLanguage = useSelector((state) => state?.persistedReducer?.language?.lang) || 'en';
 
   const handleMenuOpen = (event) => setAnchorEl(event?.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);

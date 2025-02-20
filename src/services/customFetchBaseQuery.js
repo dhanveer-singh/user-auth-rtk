@@ -4,7 +4,7 @@ const customFetchBaseQuery = ({ baseUrl }) => {
   const baseQuery = fetchBaseQuery({ baseUrl });
 
   return async (args, api, extraOptions) => {
-    const token = api?.getState()?.authSlice?.token;
+    const token = api?.getState()?.persistedReducer?.authSlice?.token;
 
     if (!args.headers) {
       args.headers = new Headers();
