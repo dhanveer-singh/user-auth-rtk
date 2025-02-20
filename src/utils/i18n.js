@@ -16,14 +16,14 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: store.getState()?.language?.lang || 'en',
+    lng: store.getState()?.persistedReducer?.language?.lang || 'en',
     interpolation: {
       escapeValue: false,
     },
   });
 
 store.subscribe(() => {
-  const newLang = store.getState()?.language?.lang;
+  const newLang = store.getState()?.persistedReducer?.language?.lang;
   if (newLang && i18n.language !== newLang) {
     i18n.changeLanguage(newLang);
   }
