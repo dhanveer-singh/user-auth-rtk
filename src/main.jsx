@@ -12,6 +12,7 @@ import router from './routes/index';
 import { store, persistStor } from './store/store';
 
 import './assets/styles/global.css';
+import './utils/i18n';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

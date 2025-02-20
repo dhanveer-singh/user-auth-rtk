@@ -10,6 +10,7 @@ import {
   ExitToApp,
   MenuOpen,
 } from '@mui/icons-material';
+import LanguageIcon from '@mui/icons-material/Language';
 import {
   AppBar,
   Toolbar,
@@ -22,16 +23,20 @@ import {
   Badge,
   ListItemIcon,
   Divider,
+  Select,
+  FormControl,
 } from '@mui/material';
 import { deepOrange } from '@mui/material/colors';
+import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import HoverTooltip from './tooltip';
 import { clearUser } from '@/services/auth/authSlice';
+import { setLanguage } from '@/store/slices/languageSlice';
 import FRONTEND_ROUTES from '@/utils/constants/frontend-routes';
+import i18n from '@/utils/i18n';
 import { showToast } from '@/utils/toast';
-
 const Header = ({
   isSidebarOpen,
   isOpen,
@@ -39,18 +44,29 @@ const Header = ({
   darkMode,
   toggleTheme,
 }) => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const user = useSelector((state) => state?.persistedReducer?.auth?.user);
-  const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const user = useSelector((state) => state?.authSlice?.user) || {};
+  const currentLanguage = useSelector((state) => state?.language?.lang) || 'en';
+
+  const handleMenuOpen = (event) => setAnchorEl(event?.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
 
   const handleLogout = () => {
     dispatch(clearUser());
-    showToast.success('You have logged out successfully!');
+    showToast.success(t('logout_success'));
   };
+
+  const handleLanguageChange = (event) => {
+    const newLang = event.target.value;
+    i18n.changeLanguage(newLang);
+    dispatch(setLanguage(newLang));
+  };
+
   return (
     <AppBar
       position='sticky'
@@ -65,20 +81,25 @@ const Header = ({
       }}
     >
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        {/* Sidebar Toggle */}
         <HoverTooltip
-          title={isOpen ? 'Collapse Menu' : 'Expand Menu'}
-          placement={'bottom'}
+          title={isOpen ? t('collapse_menu') : t('expand_menu')}
+          placement='bottom'
         >
           <IconButton color='inherit' onClick={toggleSidebar}>
             {isOpen ? <MenuOpen /> : <MenuIcon />}
           </IconButton>
         </HoverTooltip>
 
+        {/* Right Section */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          {/* Theme Toggle */}
           <IconButton onClick={toggleTheme} color='inherit'>
             {darkMode ? <LightMode /> : <DarkMode />}
           </IconButton>
-          <HoverTooltip title={'Notification'} placement={'bottom'}>
+
+          {/* Notifications */}
+          <HoverTooltip title={t('notifications')} placement='bottom'>
             <IconButton color='inherit'>
               <Badge badgeContent={3} color='error'>
                 <Notifications />
@@ -86,6 +107,29 @@ const Header = ({
             </IconButton>
           </HoverTooltip>
 
+          {/* Language Selector */}
+          <FormControl
+            size='small'
+            sx={{
+              minWidth: 120,
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
+            <LanguageIcon sx={{ mr: 1, color: 'gray' }} />
+            <Select
+              value={currentLanguage}
+              onChange={handleLanguageChange}
+              displayEmpty
+              sx={{ height: 32, fontSize: 14 }}
+            >
+              <MenuItem value='en'>English</MenuItem>
+              <MenuItem value='es'>Español</MenuItem>
+            </Select>
+          </FormControl>
+
+          {/* User Profile Menu */}
           <Box
             sx={{
               display: 'flex',
@@ -105,10 +149,12 @@ const Header = ({
 
           <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
             <MenuItem disabled>
-              <Typography variant='body1'>Welcome, {user?.name}!</Typography>
+              <Typography variant='body1'>
+                {t('welcome')}, {user?.name}!
+              </Typography>
             </MenuItem>
             <Divider />
-            <HoverTooltip title={'Profile'} placement={'top'}>
+            <HoverTooltip title={t('profile')} placement='top'>
               <MenuItem
                 component={Link}
                 to={FRONTEND_ROUTES.PROFILE}
@@ -117,15 +163,15 @@ const Header = ({
                 <ListItemIcon>
                   <AccountCircle fontSize='small' />
                 </ListItemIcon>
-                Profile
+                {t('profile')}
               </MenuItem>
             </HoverTooltip>
-            <HoverTooltip title={'Profile'} placement={'top'}>
+            <HoverTooltip title={t('logout')} placement='top'>
               <MenuItem onClick={handleLogout}>
                 <ListItemIcon>
                   <ExitToApp fontSize='small' />
                 </ListItemIcon>
-                Logout
+                {t('logout')}
               </MenuItem>
             </HoverTooltip>
           </Menu>

@@ -13,19 +13,24 @@ import {
   IconButton,
   useMediaQuery,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 
 import HoverTooltip from '../tooltip';
-import sidebarItems from './sidebarItems';
+import getSidebarItems from './sidebarItems';
 import { flexCenter } from '@/assets/styles/mixins';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
+  const { t } = useTranslation();
   const location = useLocation();
   const isMobile = useMediaQuery('(max-width: 768px)');
   const [openMenus, setOpenMenus] = useState({});
   const handleToggle = (title) => {
     setOpenMenus((prev) => ({ ...prev, [title]: !prev[title] }));
   };
+
+  const sidebarItems = getSidebarItems(t);
+  
   return (
     <Drawer
       variant={isMobile ? 'temporary' : 'permanent'}

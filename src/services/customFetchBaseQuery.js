@@ -4,7 +4,7 @@ const customFetchBaseQuery = ({ baseUrl }) => {
   const baseQuery = fetchBaseQuery({ baseUrl });
 
   return async (args, api, extraOptions) => {
-    const token = api?.getState()?.persistedReducer?.auth?.token;
+    const token = api?.getState()?.authSlice?.token;
 
     if (!args.headers) {
       args.headers = new Headers();
@@ -16,7 +16,6 @@ const customFetchBaseQuery = ({ baseUrl }) => {
 
     try {
       const result = await baseQuery(args, api, extraOptions);
-      console.log({ result });
 
       if (result.meta?.response?.ok) {
         // This check is for weather the HTTP request itself was successful.

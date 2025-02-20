@@ -1,5 +1,6 @@
 import { Delete } from '@mui/icons-material';
 import { Box, IconButton, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import Swal from 'sweetalert2';
 
 import CardWrapper from '@/components/cards';
@@ -11,6 +12,7 @@ import {
 } from '@/services/auth/authCreateApi';
 
 const Users = () => {
+   const { t } = useTranslation();
   const [deleteUser] = useDeleteUserMutation();
   const { data, isLoading } = useGetUsersQuery({ page: 1, limit: 10 });
 
@@ -66,9 +68,7 @@ const Users = () => {
 
   return (
     <Box>
-      <Typography variant='h4' component='h5'>
-        Users
-      </Typography>
+      <Typography variant='h4' component='h5'>{t('users')}</Typography>
       <CardWrapper>
         <DataTable columns={columns} rows={rows} isLoading={isLoading} />
       </CardWrapper>

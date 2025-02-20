@@ -7,7 +7,7 @@ const PrivateRoute = ({ children }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const auth = useSelector((state) => state?.persistedReducer?.auth);
+  const auth = useSelector((state) => state?.authSlice);
   const { token } = auth;
 
   useEffect(() => {

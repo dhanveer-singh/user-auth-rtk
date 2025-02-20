@@ -3,7 +3,7 @@ import { deepOrange } from '@mui/material/colors';
 import { useSelector } from 'react-redux';
 
 const Profile = () => {
-  const user = useSelector((state) => state?.persistedReducer?.auth?.user); // Assuming the user is stored in Redux
+  const user = useSelector((state) => state?.authSlice?.user);
 
   const getAvatarContent = () => {
     return user?.profilePicture ? (

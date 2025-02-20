@@ -48,7 +48,7 @@ export const apiService = createApi({
         url: `${APIS.USERS.DELETE_USER}/${userId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Users'],
+      invalidatesTags: ['User'],
     }),
   }),
 });

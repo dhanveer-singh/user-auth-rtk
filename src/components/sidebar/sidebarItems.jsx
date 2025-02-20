@@ -2,17 +2,21 @@ import { Dashboard, Settings, Group } from '@mui/icons-material';
 
 import FRONTEND_ROUTES from '@/utils/constants/frontend-routes';
 
-const sidebarItems = [
-  { title: 'Dashboard', icon: <Dashboard />, path: FRONTEND_ROUTES.DASHBOARD },
-  { title: 'Users', icon: <Group />, path: FRONTEND_ROUTES.USERS },
+const getSidebarItems = (t) => [
   {
-    title: 'Settings',
+    title: t('sidebar.dashboard'),
+    icon: <Dashboard />,
+    path: FRONTEND_ROUTES.DASHBOARD,
+  },
+  { title: t('sidebar.users'), icon: <Group />, path: FRONTEND_ROUTES.USERS },
+  {
+    title: t('sidebar.settings'),
     icon: <Settings />,
     children: [
-      { title: 'Account', path: FRONTEND_ROUTES.ROOT_PATH },
-      { title: 'Security', path: FRONTEND_ROUTES.ROOT_PATH },
+      { title: t('sidebar.account'), path: FRONTEND_ROUTES.ROOT_PATH },
+      { title: t('sidebar.security'), path: FRONTEND_ROUTES.ROOT_PATH },
     ],
   },
 ];
 
-export default sidebarItems;
+export default getSidebarItems;
