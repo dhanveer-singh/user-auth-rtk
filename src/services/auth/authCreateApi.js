@@ -3,8 +3,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import customFetchBaseQuery from '../customFetchBaseQuery';
 import APIS from '@/utils/constants/api-routes';
 
-// Will store baseUrl in .env file later
-const baseUrl = 'https://users-auth-mern.onrender.com';
+const baseUrl = import.meta.env.VITE_BASE_URL;
 
 export const apiService = createApi({
   reducerPath: 'authApi',
@@ -13,7 +12,7 @@ export const apiService = createApi({
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (payload) => ({
-        url: APIS.AUTH.SIGNIN,
+        url: APIS?.AUTH?.SIGNIN,
         method: 'POST',
         body: payload,
       }),
@@ -21,7 +20,7 @@ export const apiService = createApi({
 
     signup: builder.mutation({
       query: (userDetails) => ({
-        url: APIS.AUTH.SIGNUP,
+        url: APIS?.AUTH?.SIGNUP,
         method: 'POST',
         body: userDetails,
       }),
@@ -29,7 +28,7 @@ export const apiService = createApi({
 
     getUsers: builder.query({
       query: ({ page = 1, limit = 10 }) => ({
-        url: APIS.USERS.GET_USERS,
+        url: APIS?.USERS?.GET_USERS,
         method: 'GET',
         params: { page, limit },
       }),
@@ -38,14 +37,14 @@ export const apiService = createApi({
 
     getMe: builder.query({
       query: () => ({
-        url: APIS.USERS.MY_PROFILE,
+        url: APIS?.USERS?.MY_PROFILE,
         method: 'GET',
       }),
     }),
 
     deleteUser: builder.mutation({
       query: (userId) => ({
-        url: `${APIS.USERS.DELETE_USER}/${userId}`,
+        url: `${APIS?.USERS?.DELETE_USER}/${userId}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['User'],

@@ -22,7 +22,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
   reducer: {
     [apiService.reducerPath]: apiService.reducer,
-    persistedReducer
+    persistedReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

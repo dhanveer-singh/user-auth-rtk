@@ -30,7 +30,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   };
 
   const sidebarItems = getSidebarItems(t);
-  
+
   return (
     <Drawer
       variant={isMobile ? 'temporary' : 'permanent'}
