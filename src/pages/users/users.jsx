@@ -10,6 +10,7 @@ import {
   useDeleteUserMutation,
   useGetUsersQuery,
 } from '@/services/auth/authCreateApi';
+import { showToast } from '@/utils/toast';
 
 const Users = () => {
   const { t } = useTranslation();
@@ -38,7 +39,7 @@ const Users = () => {
           showConfirmButton: false,
         });
       } catch (error) {
-        Swal.fire('Error', 'Failed to delete user.', error);
+        showToast.error(error || 'Failed to delete user.');
       }
     }
   };
@@ -65,6 +66,7 @@ const Users = () => {
   ];
 
   const rows = data?.data?.users || [];
+console.log({rows});
 
   return (
     <Box>

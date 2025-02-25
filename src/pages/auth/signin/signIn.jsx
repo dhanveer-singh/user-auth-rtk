@@ -64,41 +64,33 @@ const SignIn = () => {
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const inputType = showPassword ? 'text' : 'password';
 
-  const isObject = (value) =>
-    typeof value === 'object' && value !== null && !Array.isArray(value);
-
   const onSubmit = async (data) => {
     try {
       const response = await login(data).unwrap();
+
       if (response.success) {
         showToast.success(response?.message);
         dispatch(
           setUser({
+            token: response?.data?.token,
             user: {
               email: response?.data?.user?.email,
               name: response?.data?.user?.name,
             },
-            token: response?.data?.token,
           })
         );
-        response?.success && navigate(FRONTEND_ROUTES.DASHBOARD);
+        response?.success && navigate(FRONTEND_ROUTES?.DASHBOARD);
         reset();
       } else {
-        if (
-          isObject(response.errors) &&
-          Object.keys(response.formFieldErrors).length
-        ) {
-          console.log('response.errorsresponse.errors', response.errors);
-          Object.keys(response.errors).forEach((errorKey) => {
-            console.log('errorKey', errorKey);
-
-            setError(errorKey, {
-              type: 'server',
-              message: response.errors[errorKey].join(','),
-            });
-          });
-        } else {
-          showToast.error(response?.message || 'Invalid credentials');
+        if (response?.data?.errors?.fieldErrors) {
+          Object.keys(response?.data?.errors?.fieldErrors).forEach(
+            (errorKey) => {
+              setError(errorKey, {
+                type: 'server',
+                message: response?.data?.errors.fieldErrors[errorKey].join(','),
+              });
+            }
+          );
         }
       }
     } catch (err) {
@@ -113,7 +105,7 @@ const SignIn = () => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          backgroundColor: theme.palette.background.default,
+          backgroundColor: theme?.palette?.background?.default,
           padding: theme.spacing(4),
           borderRadius: 2,
           boxShadow: 3,
@@ -194,7 +186,7 @@ const SignIn = () => {
           )}
 
           <Box sx={{ textAlign: 'center' }}>
-            <Link to={FRONTEND_ROUTES.AUTH.FORGOT_PASSWORD} variant='body2'>
+            <Link to={FRONTEND_ROUTES?.AUTH?.FORGOT_PASSWORD} variant='body2'>
               Forgot password?
             </Link>
           </Box>
@@ -202,7 +194,7 @@ const SignIn = () => {
           <Box sx={{ textAlign: 'center', marginTop: 2 }}>
             <Typography variant='body2'>
               Don’t have an account?{' '}
-              <Link to={FRONTEND_ROUTES.AUTH.SIGNUP} variant='body2'>
+              <Link to={FRONTEND_ROUTES?.AUTH?.SIGNUP} variant='body2'>
                 Signup
               </Link>
             </Typography>

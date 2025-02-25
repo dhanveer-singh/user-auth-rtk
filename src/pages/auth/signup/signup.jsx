@@ -13,7 +13,6 @@ import {
 import { useTheme } from '@mui/material/styles';
 import { useForm, Controller } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
 import * as yup from 'yup';
 
 import InputField from '@/components/formFields/inputField';
@@ -76,44 +75,32 @@ const SignUp = () => {
   const inputType = showPassword ? 'text' : 'password';
   const confirmPasswordType = showConfirmPassword ? 'text' : 'password';
 
-  const isObject = (value) =>
-    typeof value === 'object' && value !== null && !Array.isArray(value);
-
   const onSubmit = async (data) => {
     try {
       const response = await signup(data).unwrap();
 
-      if (response?.success) {
+      if (response?.data?.success) {
         showToast.success('Account created successfully!');
-        navigate(FRONTEND_ROUTES.AUTH.SIGNIN);
+        navigate(FRONTEND_ROUTES?.AUTH?.SIGNIN);
       } else {
-        console.log(errors, { response });
-
-        if (
-          isObject(response.formFieldErrors) &&
-          Object.keys(response.formFieldErrors).length
-        ) {
-          Object.keys(response.formFieldErrors).forEach((errorKey) => {
-            setError(errorKey, {
-              type: 'server',
-              message: response.formFieldErrors[errorKey].join(','),
-            });
-          });
-        } else {
-          showToast.error(
-            response?.message || 'Signup failed. Please try again.'
+        if (response?.data?.errors?.fieldErrors) {
+          Object.keys(response?.data?.errors?.fieldErrors).forEach(
+            (errorKey) => {
+              setError(errorKey, {
+                type: 'server',
+                message:
+                  response?.data?.errors?.fieldErrors[errorKey].join(','),
+              });
+            }
           );
         }
       }
     } catch (err) {
       console.error('🚨 Signup Error:', err);
-      Swal.fire({
-        icon: 'error',
-        title: 'Signup Failed',
-        text:
-          err?.data?.message ||
-          'An unexpected error occurred. Please try again later.',
-      });
+      showToast.error(
+        err?.data?.message ||
+          'An unexpected error occurred. Please try again later.'
+      );
     }
   };
 
@@ -124,7 +111,7 @@ const SignUp = () => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          backgroundColor: theme.palette.background.default,
+          backgroundColor: theme?.palette?.background?.default,
           padding: theme.spacing(4),
           borderRadius: 2,
           boxShadow: 3,
@@ -236,7 +223,7 @@ const SignUp = () => {
           <Box sx={{ textAlign: 'center', marginTop: 2 }}>
             <Typography variant='body2'>
               Already have an account?{' '}
-              <Link to={FRONTEND_ROUTES.AUTH.SIGNIN} variant='body2'>
+              <Link to={FRONTEND_ROUTES?.AUTH?.SIGNIN} variant='body2'>
                 Sign In
               </Link>
             </Typography>

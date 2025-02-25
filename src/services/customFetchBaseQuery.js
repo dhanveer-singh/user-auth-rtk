@@ -1,5 +1,7 @@
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+import { showToast } from '@/utils/toast';
+
 const customFetchBaseQuery = ({ baseUrl }) => {
   const baseQuery = fetchBaseQuery({ baseUrl });
 
@@ -17,38 +19,27 @@ const customFetchBaseQuery = ({ baseUrl }) => {
     try {
       const result = await baseQuery(args, api, extraOptions);
 
-      if (result.meta?.response?.ok) {
-        // This check is for weather the HTTP request itself was successful.
-        // This means the HTTP request was successful (status code 2xx)
-
-        if (result?.data?.success) {
-          return {
-            data: {
-              data: result?.data?.data,
-              message: result.data.message,
-              success: true,
-            },
-          };
-        }
-      } else {
+      if (result?.meta?.response?.ok) {
         return {
           data: {
-            success: false,
-            formFieldErrors: result?.error?.data?.formFieldErrors,
-            errors: result?.error?.data?.errors,
-            message: result?.error?.data?.message,
+            data: result?.data?.data || null,
+            message: result?.data?.message || '',
+            success: result?.data?.success || false,
+          },
+        };
+      } else {
+        if (!result?.error?.data?.errors?.fieldErrors) {
+          showToast.error(result?.error?.data?.message);
+        }
+
+        return {
+          data: {
+            status: result?.error.status,
+            data: result?.error?.data,
+            formFieldErrors: result?.error?.data?.errors?.formFieldErrors,
           },
         };
       }
-
-      // Handle HTTP Error (non-2xx status codes)
-      const customErrorResponse = {
-        success: false,
-        status: result.error?.originalStatus || 500,
-        message: result.error?.data?.message || 'Something went wrong',
-      };
-
-      return { error: customErrorResponse };
     } catch (error) {
       // Handle unexpected errors
       console.error('Unexpected error in API middleware:', error);
