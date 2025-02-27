@@ -159,7 +159,7 @@ const Header = ({
             <HoverTooltip title={t('profile')} placement='top'>
               <MenuItem
                 component={Link}
-                to={FRONTEND_ROUTES.PROFILE}
+                to={FRONTEND_ROUTES?.PROFILE}
                 onClick={handleMenuClose}
               >
                 <ListItemIcon>

@@ -55,7 +55,7 @@ const ForgotPassword = () => {
         showToast.success('Password reset email sent successfully');
         reset();
         setIsLoading(false);
-        navigate(FRONTEND_ROUTES.AUTH.SIGNIN);
+        navigate(FRONTEND_ROUTES?.AUTH?.SIGNIN);
       }, 2000);
     } catch (err) {
       setIsLoading(false);
@@ -126,7 +126,7 @@ const ForgotPassword = () => {
           )}
 
           <Box sx={{ textAlign: 'center' }}>
-            <Link to={FRONTEND_ROUTES.AUTH.SIGNIN} variant='body2'>
+            <Link to={FRONTEND_ROUTES?.AUTH?.SIGNIN} variant='body2'>
               Back to Login
             </Link>
           </Box>

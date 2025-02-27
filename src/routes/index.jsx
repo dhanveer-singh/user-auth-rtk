@@ -15,32 +15,32 @@ import PrivateRoute from '@/utils/route-guard/privateRoutes';
 const AppRoutes = createBrowserRouter([
   {
     // Redirect from '/' to '/auth/signin'
-    path: FRONTEND_ROUTES.ROOT_PATH,
-    element: <Navigate to={FRONTEND_ROUTES.AUTH.SIGNIN} />,
+    path: FRONTEND_ROUTES?.ROOT_PATH,
+    element: <Navigate to={FRONTEND_ROUTES?.AUTH?.SIGNIN} />,
   },
   {
     element: <AuthLayout />,
     children: [
       {
-        path: FRONTEND_ROUTES.AUTH.SIGNIN,
+        path: FRONTEND_ROUTES?.AUTH?.SIGNIN,
         element: <App />,
       },
       {
-        path: FRONTEND_ROUTES.AUTH.SIGNUP,
+        path: FRONTEND_ROUTES?.AUTH?.SIGNUP,
         element: <Signup />,
       },
       {
-        path: FRONTEND_ROUTES.AUTH.FORGOT_PASSWORD,
+        path: FRONTEND_ROUTES?.AUTH?.FORGOT_PASSWORD,
         element: <ForgotPassword />,
       },
     ],
   },
   {
-    path: FRONTEND_ROUTES.ROOT_PATH,
+    path: FRONTEND_ROUTES?.ROOT_PATH,
     element: <MainLayout />,
     children: [
       {
-        path: FRONTEND_ROUTES.DASHBOARD,
+        path: FRONTEND_ROUTES?.DASHBOARD,
         element: (
           <PrivateRoute>
             <Dashboard />
@@ -48,7 +48,7 @@ const AppRoutes = createBrowserRouter([
         ),
       },
       {
-        path: FRONTEND_ROUTES.USERS,
+        path: FRONTEND_ROUTES?.USERS,
         element: (
           <PrivateRoute>
             <Users />
@@ -56,7 +56,7 @@ const AppRoutes = createBrowserRouter([
         ),
       },
       {
-        path: FRONTEND_ROUTES.PROFILE,
+        path: FRONTEND_ROUTES?.PROFILE,
         element: (
           <PrivateRoute>
             <Profile />
