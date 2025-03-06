@@ -31,7 +31,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import HoverTooltip from './tooltip';
+import HoverTooltip from '../../tooltip';
 import { clearUser } from '@/services/auth/authSlice';
 import { setLanguage } from '@/store/slices/languageSlice';
 import FRONTEND_ROUTES from '@/utils/constants/frontend-routes';

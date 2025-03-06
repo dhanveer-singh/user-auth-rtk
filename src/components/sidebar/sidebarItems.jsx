@@ -1,4 +1,4 @@
-import { Dashboard, Settings, Group } from '@mui/icons-material';
+import { Dashboard, Settings, Group, Google } from '@mui/icons-material';
 
 import FRONTEND_ROUTES from '@/utils/constants/frontend-routes';
 
@@ -9,6 +9,11 @@ const getSidebarItems = (t) => [
     path: FRONTEND_ROUTES?.DASHBOARD,
   },
   { title: t('sidebar.users'), icon: <Group />, path: FRONTEND_ROUTES?.USERS },
+  {
+    title: t('sidebar.google_map'),
+    icon: <Google />,
+    path: FRONTEND_ROUTES?.GOOGLE_MAP,
+  },
   {
     title: t('sidebar.settings'),
     icon: <Settings />,

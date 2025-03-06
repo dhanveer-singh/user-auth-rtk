@@ -4,8 +4,8 @@ import { Box, useMediaQuery } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 
 // import Footer from '../footer';
-import Header from '../header';
-import Sidebar from '../sidebar';
+import Header from './header';
+import Sidebar from '../../sidebar';
 
 const MainLayout = () => {
   const isMobile = useMediaQuery('(max-width: 768px)');

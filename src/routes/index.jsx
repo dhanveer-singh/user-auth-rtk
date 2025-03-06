@@ -1,11 +1,12 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 import App from '@/App';
-import AuthLayout from '@/components/layouts/authLayout';
-import MainLayout from '@/components/layouts/mainLayout';
+import AuthLayout from '@/components/layouts/adminLayout/authLayout';
+import MainLayout from '@/components/layouts/adminLayout/mainLayout';
 import ForgotPassword from '@/pages/auth/forgotPassword';
 import Signup from '@/pages/auth/signup/signup';
 import Dashboard from '@/pages/dashboard/dashboard';
+import GoogleMapScreen from '@/pages/googleMap';
 import Error404 from '@/pages/maintenance/Error404';
 import Profile from '@/pages/profile';
 import Users from '@/pages/users/users';
@@ -52,6 +53,14 @@ const AppRoutes = createBrowserRouter([
         element: (
           <PrivateRoute>
             <Users />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: FRONTEND_ROUTES?.GOOGLE_MAP,
+        element: (
+          <PrivateRoute>
+            <GoogleMapScreen />
           </PrivateRoute>
         ),
       },
