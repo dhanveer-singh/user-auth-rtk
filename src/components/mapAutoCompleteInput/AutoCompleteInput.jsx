@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, forwardRef } from 'react';
 
-import { Autocomplete } from '@react-google-maps/api';
+import { Autocomplete, LoadScript } from '@react-google-maps/api';
 
 import InputField from '../formFields/inputField';
 
@@ -53,22 +53,28 @@ const AutoCompleteInput = forwardRef((props, ref) => {
   }, []);
 
   return (
-    <Autocomplete
-      onLoad={(autoC) => (autocompleteRef.current = autoC)}
-      onPlaceChanged={handlePlaceChanged}
+    <LoadScript
+      googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+      libraries={['places']}
     >
-      <InputField
-        ref={ref}
-        fullWidth
-        label={label}
-        variant='outlined'
-        value={inputValue}
-        placeholder={placeholder}
-        error={error}
-        helperText={helperText}
-        onChange={handleInputChange}
-      />
-    </Autocomplete>
+
+      <Autocomplete
+        onLoad={(autoC) => (autocompleteRef.current = autoC)}
+        onPlaceChanged={handlePlaceChanged}
+      >
+        <InputField
+          ref={ref}
+          fullWidth
+          label={label}
+          variant='outlined'
+          value={inputValue}
+          placeholder={placeholder}
+          error={error}
+          helperText={helperText}
+          onChange={handleInputChange}
+        />
+      </Autocomplete>
+    </LoadScript>
   );
 });
 
