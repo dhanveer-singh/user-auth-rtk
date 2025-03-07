@@ -23,12 +23,14 @@ import { setUser } from '@/services/auth/authSlice';
 import FRONTEND_ROUTES from '@/utils/constants/frontend-routes';
 import { showToast } from '@/utils/toast';
 
+const emailRegEx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
 // Define the validation schema using Yup
 const validationSchema = yup
   .object({
     email: yup
       .string()
-      .email('Enter a valid email address')
+     .matches(emailRegEx, 'Enter a valid email address')
       .required('Email is required'),
     password: yup
       .string()
@@ -67,6 +69,7 @@ const SignIn = () => {
   const onSubmit = async (data) => {
     try {
       const response = await login(data).unwrap();
+console.log("response", response);
 
       if (response.success) {
         showToast.success(response?.message);
@@ -82,12 +85,12 @@ const SignIn = () => {
         response?.success && navigate(FRONTEND_ROUTES?.DASHBOARD);
         reset();
       } else {
-        if (response?.data?.errors?.fieldErrors) {
-          Object.keys(response?.data?.errors?.fieldErrors).forEach(
+        if (response?.data?.fieldErrors) {
+          Object.keys(response?.data?.fieldErrors).forEach(
             (errorKey) => {
               setError(errorKey, {
                 type: 'server',
-                message: response?.data?.errors.fieldErrors[errorKey].join(','),
+                message: response?.data?.fieldErrors[errorKey].join(','),
               });
             }
           );

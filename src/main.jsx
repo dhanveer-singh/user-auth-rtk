@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 
 import { CssBaseline, ThemeProvider } from '@mui/material';
+import { LoadScript } from '@react-google-maps/api';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { RouterProvider } from 'react-router';
@@ -27,7 +28,12 @@ createRoot(document.getElementById('root')).render(
             pauseOnHover
           />
           <CssBaseline />
-          <RouterProvider router={router}></RouterProvider>
+          <LoadScript
+            googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+            libraries={['places']}
+          >
+            <RouterProvider router={router}></RouterProvider>
+          </LoadScript>
         </ThemeProvider>
       </PersistGate>
     </Provider>

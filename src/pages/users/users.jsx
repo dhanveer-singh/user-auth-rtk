@@ -66,7 +66,7 @@ const Users = () => {
   ];
 
   const rows = data?.data?.users || [];
-console.log({rows});
+  console.log({ rows });
 
   return (
     <Box>

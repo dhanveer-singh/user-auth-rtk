@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -16,6 +16,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 
 import InputField from '@/components/formFields/inputField';
+import AutoCompleteInput from '@/components/mapAutoCompleteInput/AutoCompleteInput';
 import { useSignupMutation } from '@/services/auth/authCreateApi';
 import FRONTEND_ROUTES from '@/utils/constants/frontend-routes';
 import { showToast } from '@/utils/toast';
@@ -26,7 +27,7 @@ const validationSchema = yup
       .string()
       .required('Full Name is required')
       .min(3, 'Name must be at least 3 characters')
-      .max(30, 'Name cannot exceed 50 characters')
+      .max(30, 'Name cannot exceed 30 characters')
       .matches(/^[a-zA-Z\s]+$/, 'Name can only contain letters and spaces'),
     email: yup
       .string()
@@ -35,7 +36,7 @@ const validationSchema = yup
     password: yup
       .string()
       .required('Password is required')
-      .min(6, 'Password should be at least 6 characters')
+      .min(6, 'Password should at least 6 characters')
       .matches(/^\S*$/, 'Password cannot contain spaces'),
     confirmPassword: yup
       .string()
@@ -44,19 +45,32 @@ const validationSchema = yup
         [yup.ref('password'), null],
         'Confirm passwords must match with password'
       ),
+    location: yup.string().required('Location is required'),
+    city: yup.string().required('City is required'),
+    state: yup.string().required('State is required'),
+    country: yup.string().required('Country is required'),
   })
   .required();
 
 const SignUp = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [visibility, setVisibility] = useState({
+    password: false,
+    confirmPassword: false,
+  });
+  const toggleVisibility = (key) =>
+    setVisibility((prev) => ({ ...prev, [key]: !prev[key] }));
+
   const [signup, { isLoading, error }] = useSignupMutation();
+
+  const [selectedLocation, setSelectedLocation] = useState(null);
 
   const {
     control,
     setError,
+    clearErrors,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -65,31 +79,40 @@ const SignUp = () => {
       name: '',
       email: '',
       password: '',
+      location: '',
+      city: '',
+      state: '',
+      country: '',
     },
   });
 
-  const handleClickShowPassword = () => setShowPassword(!showPassword);
-  const handleClickShowConfirmPassword = () =>
-    setShowConfirmPassword(!showConfirmPassword);
-
-  const inputType = showPassword ? 'text' : 'password';
-  const confirmPasswordType = showConfirmPassword ? 'text' : 'password';
-
-  const onSubmit = async (data) => {
+  useEffect(() => {
+    if (selectedLocation) {
+      setValue('location', selectedLocation.name, { shouldValidate: true });
+      setValue('city', selectedLocation.city, { shouldValidate: true });
+      setValue('state', selectedLocation.state, { shouldValidate: true });
+      setValue('country', selectedLocation.country, { shouldValidate: true });
+      clearErrors(['location', 'city', 'state', 'country']);
+    }
+  }, [selectedLocation, setValue, clearErrors]);
+  const handleLocationSelect = useCallback((locationData) => {
+    setSelectedLocation(locationData);
+  }, []);
+  const onSubmit = async (data) => {    
     try {
       const response = await signup(data).unwrap();
-
-      if (response?.data?.success) {
-        showToast.success('Account created successfully!');
+      console.log("response", response);
+      
+      if (response?.success) {
+        showToast.success(await response?.message || "User registered successfully");
         navigate(FRONTEND_ROUTES?.AUTH?.SIGNIN);
       } else {
-        if (response?.data?.errors?.fieldErrors) {
-          Object.keys(response?.data?.errors?.fieldErrors).forEach(
-            (errorKey) => {
+        if (response?.fieldErrors) {
+          Object.keys(response?.fieldErrors).forEach(
+            (errorKey) => {              
               setError(errorKey, {
                 type: 'server',
-                message:
-                  response?.data?.errors?.fieldErrors[errorKey].join(','),
+                message: response?.fieldErrors[errorKey].join(', '),
               });
             }
           );
@@ -98,7 +121,7 @@ const SignUp = () => {
     } catch (err) {
       console.error('🚨 Signup Error:', err);
       showToast.error(
-        err?.data?.message ||
+        err?.message ||
           'An unexpected error occurred. Please try again later.'
       );
     }
@@ -161,15 +184,15 @@ const SignUp = () => {
               <InputField
                 {...field}
                 label='Password'
-                type={inputType}
+                type={visibility.password ? 'text' : 'password'}
                 fullWidth
                 endAdornment={
                   <IconButton
                     aria-label='toggle password visibility'
-                    onClick={handleClickShowPassword}
+                    onClick={()=>toggleVisibility('password')}
                     edge='end'
                   >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                    {visibility.password ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 }
                 error={!!errors.password}
@@ -186,21 +209,80 @@ const SignUp = () => {
               <InputField
                 {...field}
                 label='Confirm Password'
-                type={confirmPasswordType}
+                type={visibility.confirmPassword ? 'text' : 'password'}
                 fullWidth
                 endAdornment={
                   <IconButton
                     aria-label='toggle confirm password visibility'
-                    onClick={handleClickShowConfirmPassword}
+                    onClick={()=>toggleVisibility('confirmPassword')}
                     edge='end'
                   >
-                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                    {visibility.confirmPassword ? (
+                      <VisibilityOff />
+                    ) : (
+                      <Visibility />
+                    )}
                   </IconButton>
                 }
-                sx={{ marginBottom: 3 }}
                 error={!!errors.confirmPassword}
                 helperText={errors?.confirmPassword?.message}
                 autoComplete='new-password'
+              />
+            )}
+          />
+          <Controller
+            name='location'
+            control={control}
+            render={({ field }) => (
+              <AutoCompleteInput
+                {...field}
+                label='Search Address'
+                placeholder='Start typing your address...'
+                error={!!errors.location}
+                helperText={errors.location?.message}
+                onSelect={handleLocationSelect}
+              />
+            )}
+          />
+          <Controller
+            name='city'
+            control={control}
+            render={({ field }) => (
+              <InputField
+                {...field}
+                label='City'
+                fullWidth
+                error={!!errors.city}
+                helperText={errors?.city?.message}
+              />
+            )}
+          />
+
+          <Controller
+            name='state'
+            control={control}
+            render={({ field }) => (
+              <InputField
+                {...field}
+                label='State'
+                fullWidth
+                error={!!errors.state}
+                helperText={errors?.state?.message}
+              />
+            )}
+          />
+
+          <Controller
+            name='country'
+            control={control}
+            render={({ field }) => (
+              <InputField
+                {...field}
+                label='Country'
+                fullWidth
+                error={!!errors.country}
+                helperText={errors?.country?.message}
+                sx={{ marginBottom: 3 }}
               />
             )}
           />

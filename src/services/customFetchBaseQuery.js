@@ -18,7 +18,8 @@ const customFetchBaseQuery = ({ baseUrl }) => {
 
     try {
       const result = await baseQuery(args, api, extraOptions);
-
+      console.log({result});
+      
       if (result?.meta?.response?.ok) {
         return {
           data: {
@@ -36,7 +37,7 @@ const customFetchBaseQuery = ({ baseUrl }) => {
           data: {
             status: result?.error.status,
             data: result?.error?.data,
-            formFieldErrors: result?.error?.data?.errors?.formFieldErrors,
+            fieldErrors: result?.error?.data?.errors?.fieldErrors,
           },
         };
       }
